@@ -1,0 +1,165 @@
+        --------------------------------------------------
+                      CodeNarc - Convention Rules
+        --------------------------------------------------
+
+Convention Rules  ("<rulesets/convention.xml>")
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+* {ConfusingTernary} Rule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <Since CodeNarc 0.12>
+
+  In a ternary expression avoid negation in the test. For example, rephrase:
+  <<<(x != y) ? diff : same>>> as: <<<(x == y) ? same : diff>>>. Consistent use of this rule makes the code easier to read.
+  Also, this resolves trivial ordering problems, such as "does the error case go first?" or "does the common case go first?".
+
+  Example:
+
+-------------------------------------------------------------------------------
+    (x != y) ? diff : same      // triggers violation
+    (!x) ? diff : same          // triggers violation
+
+    (x == y) ? same : diff      // OK
+    (x) ? same : diff           // OK
+
+    // this is OK, because of GroovyTruth there is no inverse of != null
+    (x != null) ? diff : same
+
+    // this is OK, because of GroovyTruth there is no inverse of != true
+    (x != true) ? diff : same
+
+    // this is OK, because of GroovyTruth there is no inverse of != false
+    (x != false) ? diff : same
+-------------------------------------------------------------------------------
+
+
+* {CouldBeElvis} Rule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <Since CodeNarc 0.15>
+
+  Catch an if block that could be written as an elvis expression.
+
+  Example of violations:
+
+-------------------------------------------------------------------------------
+// violation
+if (!x) {
+    x = 'some value'
+}
+
+// OK
+x ?: 'some value'
+-------------------------------------------------------------------------------
+
+
+* {HashtableIsObsolete} Rule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <Since CodeNarc 0.17>
+
+  Checks for references to the (<effectively>) obsolete <<<java.util.Hashtable>>> class.
+  Use the <<Java Collections Framework>> classes instead, including <<<HashMap>>> or
+  <<<ConcurrentHashMap>>>. See the JDK javadoc.
+
+  Example of violations:
+
+-------------------------------------------------------------------------------
+    def myMap = new Hashtable()           // violation
+-------------------------------------------------------------------------------
+
+
+* {InvertedIfElse} Rule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <Since CodeNarc 0.11>
+
+  An inverted <if-else> statement is one in which there is a single <<<if>>> statement with a single
+  <<<else>>> branch and the boolean test of the <<<if>>> is negated. For instance <<<if (!x) false else true>>>.
+  It is usually clearer to write this as <<<if (x) true else false>>>.
+
+
+* {LongLiteralWithLowerCaseL} Rule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <New in CodeNarc 0.16>
+
+  In Java and Groovy, you can specify long literals with the L or l character,
+  for instance 55L or 24l. It is best practice to always use an uppercase L and never
+  a lowercase l. This is because 11l rendered in some fonts may look like 111 instead of 11L.
+
+  Example of violations:
+
+-------------------------------------------------------------------------------
+    def x = 1l
+    def y = 55l
+-------------------------------------------------------------------------------
+
+
+* {ParameterReassignment} Rule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <Since CodeNarc 0.17>
+
+  Checks for a method or closure parameter being reassigned to a new value within the body of the method/closure,
+  which is a confusing and questionable practice. Use a temporary variable instead.
+
+  Example of violations:
+
+-------------------------------------------------------------------------------
+    void myMethod(int a, String b) {
+        println a
+        b = 'new value'     // violation
+    }
+
+    def myClosure1 = { int a, b ->
+        a = 123             // violation
+    }
+-------------------------------------------------------------------------------
+
+
+* {TernaryCouldBeElvis} Rule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <Since CodeNarc 0.17>
+
+  Checks for ternary expressions where the <boolean> and <true> expressions are the same.
+  These can be simplified to an <Elvis> expression.
+
+  Example of violations:
+
+-------------------------------------------------------------------------------
+    x ? x : false               // violation; can simplify to x ?: false
+
+    foo() ? foo() : bar()       // violation; can simplify to foo() ?: bar()
+    foo(1) ? foo(1) : 123       // violation; can simplify to foo(1) ?: 123
+
+    (x == y) ? same : diff      // OK
+    x ? y : z                   // OK
+    x ? x + 1 : x + 2           // OK
+    x ? 1 : 0                   // OK
+    x ? !x : x                  // OK
+    !x ? x : null               // OK
+
+    foo() ? bar() : 123         // OK
+    foo() ? foo(99) : 123       // OK
+    foo(x) ? foo() : 123        // OK
+    foo(1) ? foo(2) : 123       // OK
+-------------------------------------------------------------------------------
+
+  NOTE: If the <boolean> and <true> expressions are the same method call, and that method
+  call has <side-effects>, then converting it to a <Elvis> expression may produce <different>
+  behavior. The method will only be called <once>, rather than <twice>. But relying on those
+  <side-effects> as part of a ternary expression behavior is confusing, error-prone and just a
+  bad idea. In any case, that code should be refactored to move the reliance on the side-effects
+  out of the ternary expression.
+
+
+* {VectorIsObsolete} Rule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <Since CodeNarc 0.17>
+
+  Checks for references to the (<effectively>) obsolete <<<java.util.Vector>>> class.
+  Use the <<Java Collections Framework>> classes instead, including <<<ArrayList>>> or
+  <<<Collections.synchronizedList()>>>. See the JDK javadoc.
+
+  Example of violations:
+
+-------------------------------------------------------------------------------
+    def myList = new Vector()           // violation
+-------------------------------------------------------------------------------

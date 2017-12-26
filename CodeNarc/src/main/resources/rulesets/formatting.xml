@@ -1,0 +1,19 @@
+<ruleset xmlns="http://codenarc.org/ruleset/1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://codenarc.org/ruleset/1.0 http://codenarc.org/ruleset-schema.xsd"
+        xsi:noNamespaceSchemaLocation="http://codenarc.org/ruleset-schema.xsd">
+
+    <description>
+        Formatting rule set.
+        These rules find formatting problems within the source code.
+    </description>
+
+
+    <rule class='org.codenarc.rule.formatting.BracesForClassRule'/>
+    <rule class='org.codenarc.rule.formatting.LineLengthRule'/>
+    <rule class='org.codenarc.rule.formatting.BracesForForLoopRule'/>
+    <rule class='org.codenarc.rule.formatting.BracesForIfElseRule'/>
+    <rule class='org.codenarc.rule.formatting.BracesForMethodRule'/>
+    <rule class='org.codenarc.rule.formatting.BracesForTryCatchFinallyRule'/>
+    <rule class='org.codenarc.rule.formatting.ClassJavadocRule'/>
+</ruleset>
