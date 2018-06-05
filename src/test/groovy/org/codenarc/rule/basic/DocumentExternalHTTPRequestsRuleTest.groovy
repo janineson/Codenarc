@@ -32,22 +32,11 @@ class DocumentExternalHTTPRequestsRuleTest extends AbstractRuleTestCase {
 
     void testSuccessScenario() {
         final SOURCE = '''
-        	  def params = [
-                uri: "http://httpbin.org",
-                path: "/get"
-            ]
-            //this returns the content type and data 
-            try {
-                httpGet(params) { resp ->
-                    resp.headers.each {
-                       log.debug "${it.name} : ${it.value}"
-                    }
-                    log.debug "response contentType: ${resp.contentType}"
-                    log.debug "response data: ${resp.data}"
-                }
-            } catch (e) {
-                log.error "something went wrong: $e"
-            }
+        	 def getFoo() {}
+            def putFoo() {}
+            def postFoo() {}
+            def deleteFoo() {}
+            def getBar() {}
         '''
         assertNoViolations(SOURCE)
     }

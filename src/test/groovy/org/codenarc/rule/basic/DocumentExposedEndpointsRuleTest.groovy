@@ -32,23 +32,6 @@ class DocumentExposedEndpointsRuleTest extends AbstractRuleTestCase {
 
     void testSuccessScenario() {
         final SOURCE = '''
-             //this API is used to get info from web 
-        	   mappings {
-                path("/foo") {
-                    action: [
-                        GET: "getFoo",
-                        PUT: "putFoo",
-                        POST: "postFoo",
-                        DELETE: "deleteFoo"
-                    ]
-                }
-                path("/bar") {
-                    action: [
-                        GET: "getBar"
-                    ]
-                }
-            }
-            
             def getFoo() {}
             def putFoo() {}
             def postFoo() {}

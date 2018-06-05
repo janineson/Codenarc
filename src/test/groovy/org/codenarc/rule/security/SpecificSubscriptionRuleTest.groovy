@@ -44,9 +44,66 @@ class SpecificSubscriptionRuleTest extends AbstractRuleTestCase {
         assertNoViolations(SOURCE)
     }
 
+    void testSuccess2Scenario() {
+        final SOURCE = '''
+            preferences {
+                section("Choose thermostat... ") {
+                input "thermostat", "capability.thermostat"
+                }
+                section("Heat setting...") {
+                input "heatingSetpoint", "number", title: "Degrees?"
+                }
+                section("Air conditioning setting..."){
+                input "coolingSetpoint", "number", title: "Degrees?"
+                }
+                }
+                
+                def installed()
+                {
+                subscribe(thermostat, "heatingSetpoint", heatingSetpointHandler)
+                subscribe(thermostat, "coolingSetpoint", coolingSetpointHandler)
+                subscribe(location, changedLocationMode)
+                subscribe(app, appTouch)
+            }
 
+        '''
+        assertNoViolations(SOURCE)
+    }
+    void testSuccess3Scenario() {
+        final SOURCE = '''
+           def initialize() {
+                subscribe(meter, "power", meterHandler)
+            }
+
+        '''
+        assertNoViolations(SOURCE)
+    }
+    void testSuccess4Scenario() {
+        final SOURCE = '''
+           def initialize() {
+                subscribe(buttonDevice, "button", buttonEvent)
+            }
+
+        '''
+        assertNoViolations(SOURCE)
+    }
+    void testSuccess5Scenario() {
+        final SOURCE = '''
+           def initialize() {
+                subscribe(location, "sunrise", setSunrise)
+                subscribe(location, "sunset", setSunset)
+            }
+
+        '''
+        assertNoViolations(SOURCE)
+    }
     void testSingleViolation() {
         final SOURCE = '''
+            preferences {
+                section("Choose ... ") {
+                    input "theSwitch", "capability.switch"
+                 }
+             }
             subscribe(theSwitch, "switch", switchHandler)
             def switchHandler(evt) {
                 if (evt.value == "on") {
@@ -54,7 +111,7 @@ class SpecificSubscriptionRuleTest extends AbstractRuleTestCase {
                 }
             }
         '''
-        assertSingleViolation(SOURCE, 2, 'subscribe(theSwitch, "switch", switchHandler)',
+        assertSingleViolation(SOURCE, 7, 'subscribe(theSwitch, "switch", switchHandler)',
             "Subscription must be specific to the Event you are interested in.")
     }
 

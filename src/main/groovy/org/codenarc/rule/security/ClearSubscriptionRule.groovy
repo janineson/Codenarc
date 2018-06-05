@@ -15,6 +15,7 @@
  */
 package org.codenarc.rule.security
 
+import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codenarc.rule.AbstractAstVisitor
@@ -37,10 +38,12 @@ class ClearSubscriptionAstVisitor extends AbstractAstVisitor {
     void visitMethodCallExpression(MethodCallExpression call){
         if(AstUtil.isMethodNamed(call, 'subscribe', 3)) {
             def attributeName = call.arguments.expressions[1]
-            if (attributeName instanceof VariableExpression)
+            if (!(attributeName instanceof ConstantExpression))
                 addViolation(call, 'Subscriptions should be clear.')
         }
 
         super.visitMethodCallExpression(call)
     }
 }
+
+

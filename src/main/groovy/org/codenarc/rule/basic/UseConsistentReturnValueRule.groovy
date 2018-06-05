@@ -16,6 +16,9 @@
 package org.codenarc.rule.basic
 
 import org.codehaus.groovy.ast.MethodNode
+import org.codehaus.groovy.ast.expr.ArgumentListExpression
+import org.codehaus.groovy.ast.expr.TernaryExpression
+import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codenarc.rule.AbstractAstVisitor
 import org.codenarc.rule.AbstractAstVisitorRule
@@ -33,23 +36,50 @@ class UseConsistentReturnValueRule extends AbstractAstVisitorRule {
 
 class UseConsistentReturnValueAstVisitor extends AbstractAstVisitor {
     def dType
+    boolean isDynamicTyped
     @Override
     void visitMethodEx(MethodNode node) {
         dType = null
+        isDynamicTyped = false
         super.visitMethodEx(node)
     }
 
     @Override
     void visitReturnStatement(ReturnStatement statement) {
-
-        if(isFirstVisit(statement)) {
-            if (dType.is(null))
+        if (isFirstVisit(statement)) {
+            if (dType.is(null)){
                 dType = statement.expression.type
+                if (statement.expression instanceof VariableExpression)
+                    if (statement.expression.isDynamicTyped)
+                        isDynamicTyped = true
+            }
 
-            if (dType != statement.expression.type)
-                addViolation(statement, "Use consistent return values.")
 
+            if (dType != statement.expression.type) {
+                if (statement.expression instanceof VariableExpression)
+                    if (statement.expression.isDynamicTyped)
+                        isDynamicTyped = true
+
+
+                if (isDynamicTyped){
+                    //ok
+                } else {
+                    if (dType.name == "java.lang.String" && statement.expression.type.name == "groovy.lang.GString") {
+                        //ok
+                    } else if (dType.name == "groovy.lang.GString" && statement.expression.type.name == "java.lang.String") {
+                        //ok
+                    } else if (statement.expression instanceof TernaryExpression) {
+                        if (statement.expression.trueExpression.type.name != "groovy.lang.GString")
+                            addViolation(statement, "Use consistent return values.")
+                    }else
+                            addViolation(statement, "Use consistent return values.")
+                }
+
+            }
+            super.visitReturnStatement(statement)
         }
-        super.visitReturnStatement(statement)
+
     }
+
+
 }

@@ -41,6 +41,68 @@ class UseConsistentReturnValueRuleTest extends AbstractRuleTestCase {
         assertNoViolations(SOURCE)
     }
 
+    void test2SuccessScenario() {
+        final SOURCE = '''
+            def getSomeResult(String input) {
+                if (input == "hello")   
+                    return "ok"
+                return input
+            }
+        '''
+        assertNoViolations(SOURCE)
+    }
+
+    void test3SuccessScenario() {
+        final SOURCE = '''
+            def endLevelLabel() {
+                if (usesOldSettings()) {
+                    if (direction && direction == "Down") { // 99 -> 1
+                        return "0%"
+                    }
+                    return "99%"
+                }
+                return "${endLevel}%"
+            }
+        '''
+        assertNoViolations(SOURCE)
+    }
+
+    void test4SuccessScenario() {
+        final SOURCE = '''
+            def startLevelLabel() {
+                if (usesOldSettings()) { // using old settings
+                    if (direction && direction == "Down") { // 99 -> 1
+                    return "99%"
+                    }
+                    return "0%"
+                }
+                return hasStartLevel() ? "${startLevel}%" : "Current Level"
+            }
+
+        '''
+        assertNoViolations(SOURCE)
+    }
+
+    void test5SuccessScenario() {
+        final SOURCE = '''
+            private int sanitizeInt(i, int defaultValue = 0) {
+                try {
+                    if (!i) {
+                        return defaultValue
+                    } else {
+                        return i as int
+                    }
+                }
+                catch (Exception e) {
+                    log.debug e
+                    return defaultValue
+                }
+            }
+        '''
+        assertNoViolations(SOURCE)
+    }
+
+
     void testViolation() {
         final SOURCE = '''
             def getSomeResult(input) {

@@ -41,6 +41,14 @@ class HandleNullValueRuleTest extends AbstractRuleTestCase {
         '''
         assertNoViolations(SOURCE)
     }
+    void test2SuccessScenario() {
+        final SOURCE = '''
+        	  def phrase = find('phrase', buttonNumber, value)
+            if (phrase != null) location.helloHome.execute(phrase)
+     
+        '''
+        assertNoViolations(SOURCE)
+    }
     void testSecondSuccessScenario() {
         final SOURCE = '''
         	  // if the LAN event does not have headers, or a "content-type" header,

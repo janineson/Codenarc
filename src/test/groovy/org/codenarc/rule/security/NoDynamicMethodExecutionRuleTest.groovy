@@ -48,7 +48,24 @@ class NoDynamicMethodExecutionRuleTest extends AbstractRuleTestCase {
         '''
         assertNoViolations(SOURCE)
     }
-
+    void testSuccess2Scenario() {
+        final SOURCE = '''
+            def params = [
+                uri: "http://httpbin.org",
+                path: "/get"
+            ]
+            
+            try {
+                httpGet(params) { 
+                    params
+                }
+            } catch (e) {
+                log.error "something went wrong: $e"
+            }
+            
+        '''
+        assertNoViolations(SOURCE)
+    }
     void testSingleViolation() {
         final SOURCE = '''
             def params = [

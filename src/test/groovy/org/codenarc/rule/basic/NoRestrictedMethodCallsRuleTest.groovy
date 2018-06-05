@@ -40,7 +40,17 @@ class NoRestrictedMethodCallsRuleTest extends AbstractRuleTestCase {
         '''
         assertNoViolations(SOURCE)
     }
-
+    void test2SuccessScenario() {
+        final SOURCE = '''
+            def jawboneHandler(evt) {
+                log.debug "In Jawbone Event Handler, Event Name = ${evt.name}, Value = ${evt.value}"
+                
+                location.helloHome.execute(settings.wakePhrase)
+             }
+        
+        '''
+        assertNoViolations(SOURCE)
+    }
     void testSingleViolation() {
         final SOURCE = '''
             def motionDetectedHandler(evt) {
@@ -53,7 +63,16 @@ class NoRestrictedMethodCallsRuleTest extends AbstractRuleTestCase {
         '''
         assertSingleViolation(SOURCE, 6, "print()", "SmartThings restricted methods calls are not allowed.")
     }
-
+    void test2SingleViolation() {
+        final SOURCE = '''
+            def jawboneHandler(evt) {
+                log.debug "In Jawbone Event Handler, Event Name = ${evt.name}, Value = ${evt.value}"
+                execute()
+             }
+        
+        '''
+        assertSingleViolation(SOURCE, 4, "execute()", "SmartThings restricted methods calls are not allowed.")
+    }
     protected Rule createRule() {
         new NoRestrictedMethodCallsRule()
     }

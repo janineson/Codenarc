@@ -1,5 +1,17 @@
 
 #TODO: Sort the following line into the file
+- CountEventHandler rule (basic) - No. of event handlers.
+
+
+#TODO: Sort the following line into the file
+- CountSubscription rule (basic) - Counts the number of subscriptions in a SmartApp.
+
+
+#TODO: Sort the following line into the file
+- CountInput rule (basic) - Counts the number of input in a SmartApp.
+
+
+#TODO: Sort the following line into the file
 - TotalLinesOfCode rule (basic) - This is the total lines of code.
 
 

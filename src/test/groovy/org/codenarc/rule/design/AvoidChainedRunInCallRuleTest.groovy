@@ -35,10 +35,23 @@ class AvoidChainedRunInCallRuleTest extends AbstractRuleTestCase {
         	 def initialize() { 
                 runIn(60, handler) //ok
             }
+            def handler() { 
+                //some logic here
+            }
         '''
         assertNoViolations(SOURCE)
     }
-
+    void testSuccess2Scenario() {
+        final SOURCE = '''
+        	 def initialize() { 
+                runEvery5Minutes(handler) //ok
+            }
+            def handler() { 
+                //some logic here
+            }
+        '''
+        assertNoViolations(SOURCE)
+    }
     void testViolation() {
         final SOURCE = '''
             def initialize() { 

@@ -65,4 +65,7 @@
     <rule class='org.codenarc.rule.basic.NoGlobalVariableRule'/>
     <rule class='org.codenarc.rule.basic.SingleArgEventHandlerRule'/>
     <rule class='org.codenarc.rule.basic.TotalLinesOfCodeRule'/>
+    <rule class='org.codenarc.rule.basic.CountInputRule'/>
+    <rule class='org.codenarc.rule.basic.CountSubscriptionRule'/>
+    <rule class='org.codenarc.rule.basic.CountEventHandlerRule'/>
 </ruleset>
